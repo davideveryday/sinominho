@@ -16,6 +16,28 @@ class SynonymProvider {
     }
 }
 
+function createTooltip() {
+    const tooltip = document.createElement("div");
+    tooltip.id = "syn-tooltip";
+    document.body.appendChild(tooltip);
+
+    return tooltip;
+}
+
+function showToolTip(tooltip, word, synonyms) {
+    tooltip.innerHTML = `
+        <strong>${word}</strong>
+        <br>
+        <br>
+        ${(synonyms?.join("<br>") ?? "")}
+    `;
+    tooltip.style.display = "inline";
+}
+
+function hideToolTip(tooltip) {
+    tooltip.innerHTML = "";
+    tooltip.style.display = "none";
+}
 
 function parseMouseSelection(input) {
     const text = input.toString().trim();
@@ -29,8 +51,20 @@ function parseMouseSelection(input) {
 }
 
 function handleSelection(synonymProvider) {
-    const word = parseMouseSelection(window.getSelection());
-    if (word) console.log(word + ": " + (synonymProvider.get(word) ?? ""));
+    const selection = window.getSelection();
+    const word = parseMouseSelection(selection);
+    const tooltip = createTooltip();
+
+    if (word) {
+        const rect = selection.getRangeAt(0).getBoundingClientRect();
+        tooltip.style.left = `${rect.left + window.scrollX}px`;
+        tooltip.style.top = `${rect.bottom + window.scrollY + 10}px`;
+
+        showToolTip(tooltip, word, synonymProvider.get(word));
+    }
+
+    hideToolTip(tooltip);
+    
 }
 
 async function main() {
