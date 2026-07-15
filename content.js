@@ -50,10 +50,10 @@ function parseMouseSelection(input) {
     return lastSelectedWord;
 }
 
-function handleSelection(synonymProvider) {
+function handleSelection(synonymProvider, tooltip) {
+    hideToolTip(tooltip);
     const selection = window.getSelection();
     const word = parseMouseSelection(selection);
-    const tooltip = createTooltip();
 
     if (word) {
         const rect = selection.getRangeAt(0).getBoundingClientRect();
@@ -62,15 +62,13 @@ function handleSelection(synonymProvider) {
 
         showToolTip(tooltip, word, synonymProvider.get(word));
     }
-
-    hideToolTip(tooltip);
-    
 }
 
 async function main() {
     const synonymProvider = new SynonymProvider();
     await synonymProvider.init();
-    document.addEventListener("mouseup", () => handleSelection(synonymProvider));
+    const tooltip = createTooltip();
+    document.addEventListener("mouseup", () => handleSelection(synonymProvider, tooltip));
 }
 
 main();
