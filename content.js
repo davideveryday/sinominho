@@ -11,7 +11,7 @@ class SynonymProvider {
         }
     }
 
-    getSynonym(word) {
+    get(word) {
         return this.#dictionary[word];
     }
 }
@@ -19,7 +19,7 @@ class SynonymProvider {
 
 function parseMouseSelection(input) {
     const text = input.toString().trim();
-    if (text.length < 0) return null;
+    if (text.length === 0) return null;
     const lastSelectedWord = text
         .split(/\s+/)
         .pop()
@@ -30,8 +30,7 @@ function parseMouseSelection(input) {
 
 function handleSelection(synonymProvider) {
     const word = parseMouseSelection(window.getSelection());
-
-    console.log(word + " ---->" + (synonymProvider.getSynonym(word) ?? ""));
+    if (word) console.log(word + ": " + (synonymProvider.get(word) ?? ""));
 }
 
 async function main() {
