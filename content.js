@@ -29,7 +29,7 @@ function showToolTip(tooltip, word, synonyms) {
         <strong>${word}</strong>
         <br>
         <br>
-        ${(synonyms?.join("<br>") ?? "")}
+        ${(synonyms?.join(", ") ?? "")}
     `;
     tooltip.style.display = "inline";
 }
