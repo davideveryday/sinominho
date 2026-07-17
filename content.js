@@ -50,15 +50,15 @@ function parseMouseSelection(input) {
     return lastSelectedWord;
 }
 
-function handleSelection(synonymProvider, tooltip) {
+function handleSelection(synonymProvider, tooltip, mouseEvent) {
     hideToolTip(tooltip);
-    const selection = window.getSelection();
+    const iframe = document.querySelector(".docs-texteventtarget-iframe");
+    const selection = iframe?.contentWindow.getSelection() ?? window.getSelection();
     const word = parseMouseSelection(selection);
 
     if (word) {
-        const rect = selection.getRangeAt(0).getBoundingClientRect();
-        tooltip.style.left = `${rect.left + window.scrollX}px`;
-        tooltip.style.top = `${rect.bottom + window.scrollY + 10}px`;
+        tooltip.style.left = `${mouseEvent.clientX + window.scrollX + 10}px`;
+        tooltip.style.top = `${mouseEvent.clientY + window.scrollY + 10}px`;
 
         showToolTip(tooltip, word, synonymProvider.get(word));
     }
@@ -68,7 +68,7 @@ async function main() {
     const synonymProvider = new SynonymProvider();
     await synonymProvider.init();
     const tooltip = createTooltip();
-    document.addEventListener("mouseup", () => handleSelection(synonymProvider, tooltip));
+    document.addEventListener("mouseup", (e) => handleSelection(synonymProvider, tooltip, e));
 }
 
 main();
