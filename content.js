@@ -68,7 +68,11 @@ async function main() {
     const synonymProvider = new SynonymProvider();
     await synonymProvider.init();
     const tooltip = createTooltip();
-    document.addEventListener("mouseup", (e) => handleSelection(synonymProvider, tooltip, e));
+    document.addEventListener("mouseup", () => {
+        setTimeout(() => {
+            (e) => handleSelection(synonymProvider, tooltip, e)
+        }, 0);
+    });
 }
 
 main();
