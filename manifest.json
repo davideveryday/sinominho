@@ -27,7 +27,8 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "synonyms.json"
+                "synonyms.json",
+                "synonymsv2.json"
             ],
             "matches": [
                 "<all_urls>"

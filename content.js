@@ -55,6 +55,7 @@ function handleSelection(synonymProvider, tooltip, mouseEvent) {
     const iframe = document.querySelector(".docs-texteventtarget-iframe");
     const selection = iframe?.contentWindow.getSelection() ?? window.getSelection();
     const word = parseMouseSelection(selection);
+    console.log("im handling")
 
     if (word) {
         tooltip.style.left = `${mouseEvent.clientX + window.scrollX + 10}px`;
@@ -68,10 +69,9 @@ async function main() {
     const synonymProvider = new SynonymProvider();
     await synonymProvider.init();
     const tooltip = createTooltip();
-    document.addEventListener("mouseup", () => {
-        setTimeout(() => {
-            (e) => handleSelection(synonymProvider, tooltip, e)
-        }, 0);
+
+    document.addEventListener("mouseup", (e) => {
+        handleSelection(synonymProvider, tooltip, e)
     });
 }
 
