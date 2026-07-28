@@ -3,7 +3,7 @@ class SynonymProvider {
 
     async init() {
         try {
-            const fileUrl = chrome.runtime.getURL("synonyms.json");
+            const fileUrl = chrome.runtime.getURL("synonymsv2.json");
             const response = await fetch(fileUrl);
             this.#dictionary = await response.json();
         } catch (error) {
@@ -25,12 +25,17 @@ function createTooltip() {
 }
 
 function showToolTip(tooltip, word, synonyms) {
-    tooltip.innerHTML = `
-        <strong>${word}</strong>
-        <br>
-        <br>
-        ${(synonyms?.join(", ") ?? "")}
-    `;
+    const newHtml = [];
+    for (const [w, s] of Object.entries(synonyms)) {
+        newHtml.push(
+            `<strong>${w}</strong>
+                <br>
+                ${(s?.join(", ") ?? "")}
+            `
+        )
+    }
+
+    tooltip.innerHTML = newHtml.join("<br><br>");
     tooltip.style.display = "inline";
 }
 
@@ -55,13 +60,14 @@ function handleSelection(synonymProvider, tooltip, mouseEvent) {
     const iframe = document.querySelector(".docs-texteventtarget-iframe");
     const selection = iframe?.contentWindow.getSelection() ?? window.getSelection();
     const word = parseMouseSelection(selection);
-    console.log("im handling")
 
     if (word) {
+        const stem = stemmer(word);
+        const wordMatches = synonymProvider.get(stem);
         tooltip.style.left = `${mouseEvent.clientX + window.scrollX + 10}px`;
         tooltip.style.top = `${mouseEvent.clientY + window.scrollY + 10}px`;
 
-        showToolTip(tooltip, word, synonymProvider.get(word));
+        showToolTip(tooltip, word, wordMatches);
     }
 }
 

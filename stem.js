@@ -247,7 +247,7 @@ const markRegionV = function () {
     return rv
 }
 
-function stem(word) {
+function stemmer(word) {
     let token = new Token(word.toLowerCase())
 
     token = prelude(token)
@@ -281,4 +281,4 @@ function stem(word) {
     return token.string
 }
 
-module.exports = stem;
+module.exports = stemmer;
