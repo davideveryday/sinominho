@@ -28,7 +28,6 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "synonyms.json",
                 "synonymsv2.json"
             ],
             "matches": [

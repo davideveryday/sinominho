@@ -280,5 +280,3 @@ function stemmer(word) {
 
     return token.string
 }
-
-module.exports = stemmer;
