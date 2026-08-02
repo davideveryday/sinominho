@@ -56,6 +56,8 @@ function parseMouseSelection(input) {
 }
 
 function handleSelection(synonymProvider, tooltip, mouseEvent) {
+    if (mouseEvent.detail > 1) return;
+
     hideToolTip(tooltip);
     const iframe = document.querySelector(".docs-texteventtarget-iframe");
     const selection = iframe?.contentWindow.getSelection() ?? window.getSelection();
@@ -67,6 +69,7 @@ function handleSelection(synonymProvider, tooltip, mouseEvent) {
         tooltip.style.left = `${mouseEvent.clientX + window.scrollX + 10}px`;
         tooltip.style.top = `${mouseEvent.clientY + window.scrollY + 10}px`;
 
+        console.log(wordMatches);
         if (wordMatches && showToolTip(tooltip, word, wordMatches));
     }
 }
