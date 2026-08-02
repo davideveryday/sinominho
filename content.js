@@ -46,7 +46,7 @@ function hideToolTip(tooltip) {
 
 function parseMouseSelection(input) {
     const text = input.toString().trim();
-    if (text.length === 0) return null;
+    if (text.length < 1) return null;
     const lastSelectedWord = text
         .split(/\s+/)
         .pop()
@@ -67,7 +67,7 @@ function handleSelection(synonymProvider, tooltip, mouseEvent) {
         tooltip.style.left = `${mouseEvent.clientX + window.scrollX + 10}px`;
         tooltip.style.top = `${mouseEvent.clientY + window.scrollY + 10}px`;
 
-        showToolTip(tooltip, word, wordMatches);
+        if (wordMatches && showToolTip(tooltip, word, wordMatches));
     }
 }
 
@@ -77,7 +77,9 @@ async function main() {
     const tooltip = createTooltip();
 
     document.addEventListener("mouseup", (e) => {
-        handleSelection(synonymProvider, tooltip, e)
+        setTimeout(() => {
+            handleSelection(synonymProvider, tooltip, e)
+        }, 0);
     });
 }
 
