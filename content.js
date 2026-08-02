@@ -1,5 +1,6 @@
 class SynonymProvider {
     #dictionary = null;
+    #currentWord = null;
 
     async init() {
         try {
@@ -12,7 +13,14 @@ class SynonymProvider {
     }
 
     get(word) {
+        this.setCurrentWord(word);
         return this.#dictionary[word];
+    }
+
+    getCurrentWord() { return this.#currentWord; }
+
+    setCurrentWord(newWord) {
+        if (newWord) this.#currentWord = newWord;
     }
 }
 
@@ -25,6 +33,7 @@ function createTooltip() {
 }
 
 function showToolTip(tooltip, word, synonyms) {
+    console.log("im being called");
     const newHtml = [];
     for (const [w, s] of Object.entries(synonyms)) {
         newHtml.push(
@@ -40,7 +49,6 @@ function showToolTip(tooltip, word, synonyms) {
 }
 
 function hideToolTip(tooltip) {
-    tooltip.innerHTML = "";
     tooltip.style.visibility = "hidden";
 }
 
@@ -65,12 +73,17 @@ function handleSelection(synonymProvider, tooltip, mouseEvent) {
 
     if (word) {
         const stem = stemmer(word);
-        const wordMatches = synonymProvider.get(stem);
-        tooltip.style.left = `${mouseEvent.clientX + window.scrollX + 10}px`;
-        tooltip.style.top = `${mouseEvent.clientY + window.scrollY + 10}px`;
+        const currentWord = synonymProvider.getCurrentWord();
+        if (currentWord && currentWord === stem) {
+            tooltip.style.visibility = "visible";
+        } else {
+            const wordMatches = synonymProvider.get(stem);
+            tooltip.style.left = `${mouseEvent.clientX + window.scrollX + 10}px`;
+            tooltip.style.top = `${mouseEvent.clientY + window.scrollY + 10}px`;
 
-        console.log(wordMatches);
-        if (wordMatches && showToolTip(tooltip, word, wordMatches));
+            console.log(wordMatches);
+            if (wordMatches && showToolTip(tooltip, word, wordMatches));
+        }
     }
 }
 
