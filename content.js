@@ -36,12 +36,12 @@ function showToolTip(tooltip, word, synonyms) {
     }
 
     tooltip.innerHTML = newHtml.join("<br><br>");
-    tooltip.style.display = "inline";
+    tooltip.style.visibility = "visible";
 }
 
 function hideToolTip(tooltip) {
     tooltip.innerHTML = "";
-    tooltip.style.display = "none";
+    tooltip.style.visibility = "hidden";
 }
 
 function parseMouseSelection(input) {
