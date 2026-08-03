@@ -13,15 +13,18 @@ class SynonymProvider {
     }
 
     get(word) {
-        this.setCurrentWord(word);
-        return this.#dictionary[word];
+        const synonyms = this.#dictionary[word];
+        if (synonyms && Object.keys(synonyms).length > 0) {
+            this.setCurrentWord(word);
+            return synonyms;
+        }
+
+        this.setCurrentWord(null);
+        return null;
     }
 
     getCurrentWord() { return this.#currentWord; }
-
-    setCurrentWord(newWord) {
-        if (newWord) this.#currentWord = newWord;
-    }
+    setCurrentWord(newWord) { this.#currentWord = newWord; }
 }
 
 function createTooltip() {
@@ -32,7 +35,7 @@ function createTooltip() {
     return tooltip;
 }
 
-function showToolTip(tooltip, word, synonyms) {
+function showToolTip(tooltip, synonyms) {
     console.log("im being called");
     const newHtml = [];
     for (const [w, s] of Object.entries(synonyms)) {
@@ -64,16 +67,18 @@ function parseMouseSelection(input) {
 }
 
 function handleSelection(synonymProvider, tooltip, mouseEvent) {
-    if (mouseEvent.detail > 1) return;
+    if (mouseEvent.detail > 3) return;
 
-    hideToolTip(tooltip);
     const iframe = document.querySelector(".docs-texteventtarget-iframe");
     const selection = iframe?.contentWindow.getSelection() ?? window.getSelection();
     const word = parseMouseSelection(selection);
 
+
     if (word) {
         const stem = stemmer(word);
         const currentWord = synonymProvider.getCurrentWord();
+        console.log("===", currentWord, stem);
+        // TO-DO: if you click the same invalid word twice it will display the previous saved tooltip. fix it
         if (currentWord && currentWord === stem) {
             tooltip.style.visibility = "visible";
         } else {
@@ -82,9 +87,9 @@ function handleSelection(synonymProvider, tooltip, mouseEvent) {
             tooltip.style.top = `${mouseEvent.clientY + window.scrollY + 10}px`;
 
             console.log(wordMatches);
-            if (wordMatches && showToolTip(tooltip, word, wordMatches));
+            if (wordMatches && showToolTip(tooltip, wordMatches));
         }
-    }
+    } else hideToolTip(tooltip);
 }
 
 async function main() {
